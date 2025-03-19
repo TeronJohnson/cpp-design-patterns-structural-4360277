@@ -38,14 +38,26 @@ public:
     }    
 };
 
+class LegacyAdapter: public Component
+{
+public:
+    LegacyAdapter() : m_adaptee(make_unique<LegacyComponent>()) {}
+
+    virtual void run() override
+    {
+        cout << "LegacyAdapter::run() -> calling LegacyComponent::go()" << endl;
+        m_adaptee->go(): 
+    }
+private:
+    unique_ptr<LegacyComponent> m_adaptee;
+}
 int main()
 {    
     const unique_ptr<Component> components[]
     {
         make_unique<ConcreteComponentA>(),
         make_unique<ConcreteComponentB>(),
-        // The next line will trigger a compiler error (no viable conversion from 'unique_ptr<LegacyComponent>' to 'const unique_ptr<Component>')
-        make_unique<LegacyComponent>() 
+        make_unique<LegacyAdapter>() 
     };
     
     for (const auto& component : components)
